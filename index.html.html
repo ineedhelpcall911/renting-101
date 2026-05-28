@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renting 101 — Financial Literacy Project</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --ink: #1a1612;
+    --rust: #c4521a;
+    --gold: #d4a53a;
+    --sage: #5a7a5c;
+    --sand: #e8dcc8;
+    --muted: #7a6e62;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 3rem 5vw;
+    position: relative;
+    background: var(--ink);
+    color: var(--cream);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(196,82,26,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 10% 90%, rgba(212,165,58,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .hero-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 0;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    max-width: 12ch;
+    animation: fadeUp 0.9s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--rust);
+  }
+
+  .hero-sub {
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    max-width: 50ch;
+    color: rgba(245,240,232,0.7);
+    animation: fadeUp 0.9s 0.15s ease both;
+  }
+
+  .hero-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+    animation: fadeUp 0.9s 0.3s ease both;
+  }
+
+  .hero-nav a {
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--cream);
+    text-decoration: none;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid rgba(245,240,232,0.2);
+    border-radius: 2rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .hero-nav a:hover {
+    background: var(--rust);
+    border-color: var(--rust);
+    color: #fff;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    right: 5vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    animation: fadeUp 1s 0.6s ease both;
+  }
+  .scroll-hint span {
+    display: block;
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, rgba(245,240,232,0.4), transparent);
+    animation: scrollLine 1.6s ease-in-out infinite;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    padding: 7rem 5vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 6rem;
+    font-weight: 900;
+    color: var(--sand);
+    line-height: 1;
+    float: left;
+    margin-right: 1.5rem;
+    margin-top: -0.5rem;
+    user-select: none;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--rust);
+    margin-bottom: 0.75rem;
+  }
+
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-author {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+
+  .section p {
+    font-size: 1rem;
+    color: #3a3530;
+    margin-bottom: 1.2rem;
+    max-width: 68ch;
+  }
+
+  /* dividers */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, var(--sand), transparent);
+    margin: 0;
+  }
+
+  /* ── CALLOUT BOXES ── */
+  .callout {
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 1rem;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: var(--rust);
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+  .callout-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .callout p {
+    color: rgba(245,240,232,0.85) !important;
+    margin-bottom: 0 !important;
+    font-size: 1.05rem;
+  }
+  .callout strong { color: var(--gold); }
+
+  /* ── GRID CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--sand);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(26,22,18,0.08);
+  }
+  .card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.75rem;
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  .card p {
+    font-size: 0.88rem !important;
+    color: var(--muted) !important;
+    margin: 0 !important;
+  }
+
+  /* ── CONCEPT PILLS ── */
+  .concepts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 2rem;
+  }
+  .concept-pill {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 2rem;
+    background: var(--sand);
+    color: var(--ink);
+    border: 1px solid rgba(26,22,18,0.1);
+  }
+
+  /* ── COMPARE TABLE ── */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+  .compare-col {
+    border-radius: 0.75rem;
+    padding: 1.75rem;
+  }
+  .compare-col.rent { background: #fff; border: 1px solid var(--sand); }
+  .compare-col.buy  { background: var(--ink); color: var(--cream); }
+  .compare-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .compare-col.buy h3 { color: var(--gold); }
+  .compare-col ul { list-style: none; }
+  .compare-col ul li {
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    display: flex;
+    gap: 0.5rem;
+  }
+  .compare-col.buy ul li { border-color: rgba(255,255,255,0.08); color: rgba(245,240,232,0.8); }
+  .compare-col ul li::before { content: '→'; color: var(--rust); flex-shrink: 0; }
+  .compare-col.buy ul li::before { color: var(--gold); }
+
+  /* ── SOURCES ── */
+  .sources-section {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5rem 5vw;
+  }
+  .sources-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .sources-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--gold);
+  }
+  .sources-section p {
+    color: rgba(245,240,232,0.6);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .source-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .source-list li {
+    font-size: 0.88rem;
+    color: rgba(245,240,232,0.75);
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(245,240,232,0.1);
+    border-radius: 0.5rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .source-list li::before { content: '📌'; flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: var(--cream);
+    border-top: 1px solid var(--sand);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollLine {
+    0%, 100% { opacity: 0.4; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(0.6); }
+  }
+
+  @media (max-width: 640px) {
+    .compare { grid-template-columns: 1fr; }
+    .section-number { font-size: 3.5rem; }
+    .hero h1 { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">Econ Project &nbsp;·&nbsp; Financial Literacy</div>
+  <div class="hero-center">
+    <h1>Renting a Home:<br><em>What You</em><br>Need to Know</h1>
+    <p class="hero-sub">A financial literacy guide to the rental housing market — from finding an apartment to deciding whether to buy.</p>
+  </div>
+  <nav class="hero-nav">
+    <a href="#s1">The Market</a>
+    <a href="#s2">Budgeting</a>
+    <a href="#s3">Credit & Leases</a>
+    <a href="#s4">Living in a Rental</a>
+    <a href="#s5">Renting vs. Buying</a>
+    <a href="#sources">Sources</a>
+  </nav>
+  <div class="scroll-hint">Scroll<span></span></div>
+</header>
+
+<!-- SECTION 1 -->
+<div class="divider"></div>
+<section class="section" id="s1">
+  <div class="section-number">01</div>
+  <span class="section-tag">Housing Economics</span>
+  <h2>The Housing Market: Supply, Demand & Finding a Rental</h2>
+  <div class="section-author">Written by Roshan</div>
+
+  <p>The process of renting a home begins with the <strong>housing market</strong>, which is controlled by the economic forces of supply and demand. Housing supply refers to the number of apartments, houses, or rental units available, while demand refers to how many people want to rent them.</p>
+
+  <p>When demand is high and supply is low, landlords can charge higher prices because many people are competing for limited housing. This commonly happens in cities with high-paying jobs, strong school systems, universities, and good public transportation.</p>
+
+  <div class="callout">
+    <div class="callout-label">Real-World Example</div>
+    <p>Rent in cities like <strong>San Francisco</strong> and <strong>New York City</strong> is extremely expensive because many people want to live there while space is limited — a classic case of high demand meeting scarce supply.</p>
+  </div>
+
+  <p>On the other hand, if many apartments are available and fewer people want to rent them, landlords may lower prices or offer incentives like free parking, reduced deposits, or even one month of free rent.</p>
+
+  <p>Renters act as <strong>consumers</strong> in the housing market. They compare prices, locations, and quality using online platforms — weighing rent prices, square footage, safety ratings, distance from work or school, and included utilities. This is called <em>consumer choice</em>.</p>
+
+  <p><strong>Inflation</strong> also affects housing. When the overall cost of goods and services rises, landlords often raise rent to cover higher property taxes, maintenance, insurance, and utility costs. Rising mortgage interest rates push even more people into the rental market, increasing demand further.</p>
+
+  <div class="concepts">
+    <span class="concept-pill">Supply & Demand</span>
+    <span class="concept-pill">Scarcity</span>
+    <span class="concept-pill">Competition</span>
+    <span class="concept-pill">Inflation</span>
+    <span class="concept-pill">Consumer Behavior</span>
+    <span class="concept-pill">Market Equilibrium</span>
+  </div>
+</section>
+
+<!-- SECTION 2 -->
+<div class="divider"></div>
+<section class="section" id="s2">
+  <div class="section-number">02</div>
+  <span class="section-tag">Personal Finance</span>
+  <h2>Budgeting, Affordability & Opportunity Cost</h2>
+  <div class="section-author">Written by Sock</div>
+
+  <p>Budgeting is one of the most important financial skills involved in renting. Since income is limited, renters must decide how much money they can realistically spend on housing while still covering other expenses.</p>
+
+  <div class="callout">
+    <div class="callout-label">The 30% Rule</div>
+    <p>Financial experts recommend spending <strong>no more than 30%</strong> of monthly income on housing. If someone earns <strong>$5,000/month</strong>, about <strong>$1,500</strong> on rent is manageable. Spending $3,000 leaves too little for food, transportation, savings, and emergencies.</p>
+  </div>
+
+  <p>Renters face two types of monthly expenses:</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📌</div>
+      <h3>Fixed Expenses</h3>
+      <p>Monthly rent, parking fees, renter's insurance — these stay roughly the same each month.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Variable Expenses</h3>
+      <p>Electricity, water, gas, internet — these change depending on how much you consume.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <h3>Upfront Costs</h3>
+      <p>Application fees, security deposits, first & last month's rent, moving costs, and furniture purchases.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <h3>Opportunity Cost</h3>
+      <p>Renting a luxury apartment may mean giving up savings or vacations — every choice has a trade-off.</p>
+    </div>
+  </div>
+
+  <p>Budgeting also helps prevent debt. If renters overspend on housing, they may rely on credit cards or loans for daily necessities — creating long-term financial problems.</p>
+
+  <div class="concepts">
+    <span class="concept-pill">Opportunity Cost</span>
+    <span class="concept-pill">Budget Constraints</span>
+    <span class="concept-pill">Trade-offs</span>
+    <span class="concept-pill">Fixed & Variable Costs</span>
+    <span class="concept-pill">Consumer Decision-Making</span>
+  </div>
+</section>
+
+<!-- SECTION 3 -->
+<div class="divider"></div>
+<section class="section" id="s3">
+  <div class="section-number">03</div>
+  <span class="section-tag">Risk & Contracts</span>
+  <h2>Credit, Leases & Financial Risk</h2>
+  <div class="section-author">Written by Joseph</div>
+
+  <p>Renting involves financial risk for both tenants and landlords, so systems are created to reduce uncertainty and encourage responsible behavior.</p>
+
+  <p>To reduce their risk, landlords screen applicants using <strong>credit scores</strong>, proof of income, employment history, and previous landlord references. A credit score is a numeric measure of financial reliability — it reflects whether a person has historically paid their debts on time.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <h3>High Credit Score</h3>
+      <p>Easier rental approval, lower security deposits, and better loan interest rates.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">❌</div>
+      <h3>Low Credit Score</h3>
+      <p>Landlords may reject applicants they see as high-risk, making it difficult to secure housing.</p>
+    </div>
+  </div>
+
+  <p>A <strong>lease</strong> is an economic contract — a legally enforceable agreement that covers rent amount, payment due dates, lease duration, rules, repair responsibilities, and penalties for breaking the agreement.</p>
+
+  <div class="callout">
+    <div class="callout-label">Why Leases Matter</div>
+    <p>Leases create <strong>incentives</strong> for both sides: tenants follow rules to avoid penalties or eviction, while landlords maintain the property to attract and keep tenants. Eviction has serious consequences — loss of housing, damaged credit, legal fees, and difficulty renting in the future.</p>
+  </div>
+
+  <div class="concepts">
+    <span class="concept-pill">Risk Management</span>
+    <span class="concept-pill">Credit</span>
+    <span class="concept-pill">Contracts</span>
+    <span class="concept-pill">Incentives</span>
+    <span class="concept-pill">Financial Reputation</span>
+    <span class="concept-pill">Economic Consequences</span>
+  </div>
+</section>
+
+<!-- SECTION 4 -->
+<div class="divider"></div>
+<section class="section" id="s4">
+  <div class="section-number">04</div>
+  <span class="section-tag">Daily Living</span>
+  <h2>Living in the Rental: Costs, Incentives & Government Policies</h2>
+  <div class="section-author">Written by Manya</div>
+
+  <p>After moving in, renters continue making economic decisions every month. Monthly expenses typically include rent, electricity, water, gas, trash collection, internet, and parking. Utilities are <em>variable expenses</em> that change based on usage — heavy air conditioning raises electricity bills; long showers raise water bills.</p>
+
+  <p>Maintenance responsibilities are split between landlords and tenants. Landlords handle structural repairs, plumbing, heating, and safety issues, while tenants keep the unit clean and avoid damage.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>Rent Control</h3>
+      <p>Limits how much landlords can raise rent yearly. Keeps housing affordable, but critics say it can reduce new construction.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤝</div>
+      <h3>Housing Assistance</h3>
+      <p>Government programs help lower-income individuals afford housing through subsidies and vouchers.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗺️</div>
+      <h3>Zoning Laws</h3>
+      <p>Determine where apartments and houses can be built, directly affecting housing supply in a city.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🛡️</div>
+      <h3>Tenant Protections</h3>
+      <p>Laws that protect renters from unfair eviction, discrimination, or unsafe living conditions.</p>
+    </div>
+  </div>
+
+  <p>These policies show how governments <strong>intervene in markets</strong> to address issues like affordability and inequality — balancing the needs of renters, landlords, and developers.</p>
+
+  <div class="concepts">
+    <span class="concept-pill">Government Intervention</span>
+    <span class="concept-pill">Market Regulation</span>
+    <span class="concept-pill">Incentives</span>
+    <span class="concept-pill">Variable Expenses</span>
+    <span class="concept-pill">Public Policy</span>
+    <span class="concept-pill">Economic Efficiency</span>
+  </div>
+</section>
+
+<!-- SECTION 5 -->
+<div class="divider"></div>
+<section class="section" id="s5">
+  <div class="section-number">05</div>
+  <span class="section-tag">Long-Term Planning</span>
+  <h2>Moving Out & Renting vs. Buying</h2>
+  <div class="section-author">Written by Bhavika</div>
+
+  <p>When a tenant is ready to leave, leases typically require 30–60 days' notice. The tenant cleans the property, repairs minor damage, and returns keys. If the property is left in good condition, the landlord returns the security deposit — creating an incentive to maintain the space throughout the lease.</p>
+
+  <p>Renting ultimately connects to one of the biggest financial decisions a person makes: <strong>should I rent or buy?</strong></p>
+
+  <div class="compare">
+    <div class="compare-col rent">
+      <h3>🏠 Renting</h3>
+      <ul>
+        <li>Lower upfront costs</li>
+        <li>Greater flexibility to move</li>
+        <li>Fewer maintenance responsibilities</li>
+        <li>Payments don't build ownership</li>
+        <li>Rent may increase over time</li>
+        <li>Less control over the property</li>
+      </ul>
+    </div>
+    <div class="compare-col buy">
+      <h3>🏡 Buying</h3>
+      <ul>
+        <li>Builds equity over time</li>
+        <li>Property values may increase</li>
+        <li>Can be sold later for profit</li>
+        <li>Large down payment required</li>
+        <li>Property taxes & insurance costs</li>
+        <li>Less flexibility to relocate</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Key Concept: Equity</div>
+    <p><strong>Equity</strong> is the portion of a home that a person actually owns as they pay off their mortgage and the property value rises. Homeownership can build wealth over time — but buying also comes with significant upfront and ongoing costs.</p>
+  </div>
+
+  <p>The decision between renting and buying ultimately depends on income stability, career plans, housing market conditions, interest rates, and long-term financial goals. There is no single right answer — it's about your personal trade-offs.</p>
+
+  <div class="concepts">
+    <span class="concept-pill">Equity</span>
+    <span class="concept-pill">Investment</span>
+    <span class="concept-pill">Wealth Building</span>
+    <span class="concept-pill">Trade-offs</span>
+    <span class="concept-pill">Long-Term Planning</span>
+    <span class="concept-pill">Asset Ownership</span>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<div class="divider"></div>
+<section class="sources-section" id="sources">
+  <div class="sources-inner">
+    <h2>Sources</h2>
+    <p>References used in this financial literacy project</p>
+    <ul class="source-list">
+      <li>Consumer Financial Protection Bureau (CFPB) — Renting a Home resources &amp; budgeting guides. <em>consumerfinance.gov</em></li>
+      <li>Investopedia — "Opportunity Cost," "Supply and Demand," "Credit Score," "Home Equity." <em>investopedia.com</em></li>
+      <li>U.S. Department of Housing and Urban Development (HUD) — Tenant rights, rent assistance programs, and fair housing information. <em>hud.gov</em></li>
+      <li>Khan Academy — Economics: Supply, Demand, and Market Equilibrium lessons. <em>khanacademy.org</em></li>
+      <li>National Apartment Association — Rental housing statistics and market trends. <em>naahq.org</em></li>
+      <li>Parent/trusted adult interviews conducted by group members on personal renting experiences.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  Econ Project — Financial Literacy &nbsp;·&nbsp; Rental Housing &nbsp;·&nbsp; Made with ♥ by Roshan, Sock, Joseph, Manya &amp; Bhavika
+</footer>
+
+<script>
+  // Intersection observer for fade-in sections
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
